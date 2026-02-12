@@ -74,6 +74,87 @@
             }
         }
 
+        /* Password Screen */
+        .password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            transition: opacity 1s, transform 1s;
+        }
+
+        .password-screen.hidden {
+            opacity: 0;
+            transform: scale(1.2);
+            pointer-events: none;
+        }
+
+        .password-content {
+            text-align: center;
+            color: white;
+            padding: 40px;
+        }
+
+        .password-content h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .password-content p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .password-input {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            width: 300px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Georgia', serif;
+        }
+
+        .password-button {
+            padding: 15px 50px;
+            font-size: 1.1em;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .password-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .password-error {
+            color: #ff6b6b;
+            margin-top: 15px;
+            font-size: 1em;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .password-error.show {
+            opacity: 1;
+        }
+
         /* Welcome Screen */
         .welcome-screen {
             position: fixed;
@@ -111,6 +192,12 @@
         @keyframes glow {
             0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
             50% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.8); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
         }
 
         .welcome-content p {
@@ -454,8 +541,20 @@
     <!-- Floating Hearts -->
     <div class="hearts-container" id="heartsContainer"></div>
 
+    <!-- Password Screen -->
+    <div class="password-screen" id="passwordScreen">
+        <div class="password-content">
+            <h1>🔒 For Jainy 💕</h1>
+            <p>Enter your special date to unlock your gift</p>
+            <input type="password" class="password-input" id="passwordInput" placeholder="Enter password" onkeypress="if(event.key==='Enter') checkPassword()">
+            <br>
+            <button class="password-button" onclick="checkPassword()">Unlock</button>
+            <p class="password-error" id="passwordError">❌ Incorrect password. Try again!</p>
+        </div>
+    </div>
+
     <!-- Welcome Screen -->
-    <div class="welcome-screen" id="welcomeScreen">
+    <div class="welcome-screen hidden" id="welcomeScreen">
         <div class="welcome-content">
             <h1>💝 Happy Valentine's Day Jainy 💝</h1>
             <p>I made something special just for you, my love...</p>
@@ -590,6 +689,29 @@
                 heart.style.animationDelay = Math.random() * 15 + 's';
                 heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
                 container.appendChild(heart);
+            }
+        }
+
+        // Check password
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const error = document.getElementById('passwordError');
+            const passwordScreen = document.getElementById('passwordScreen');
+            const welcomeScreen = document.getElementById('welcomeScreen');
+
+            if (input.value === '021925') {
+                passwordScreen.classList.add('hidden');
+                setTimeout(() => {
+                    welcomeScreen.classList.remove('hidden');
+                }, 500);
+            } else {
+                error.classList.add('show');
+                input.value = '';
+                input.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    error.classList.remove('show');
+                    input.style.animation = '';
+                }, 2000);
             }
         }
 
